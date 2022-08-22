@@ -1,3 +1,5 @@
+[![PkgGoDev](https://pkg.go.dev/badge/github.com/s0rg/retry)](https://pkg.go.dev/github.com/s0rg/retry)
+[![Go Report Card](https://goreportcard.com/badge/github.com/s0rg/retry)](https://goreportcard.com/report/github.com/s0rg/retry)
 [![License](https://img.shields.io/badge/license-MIT%20License-blue.svg)](https://github.com/s0rg/retry/blob/master/LICENSE)
 [![Go Version](https://img.shields.io/github/go-mod/go-version/s0rg/retry)](go.mod)
 
