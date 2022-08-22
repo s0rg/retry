@@ -1,11 +1,14 @@
 [![PkgGoDev](https://pkg.go.dev/badge/github.com/s0rg/retry)](https://pkg.go.dev/github.com/s0rg/retry)
-[![Go Report Card](https://goreportcard.com/badge/github.com/s0rg/retry)](https://goreportcard.com/report/github.com/s0rg/retry)
 [![License](https://img.shields.io/badge/license-MIT%20License-blue.svg)](https://github.com/s0rg/retry/blob/master/LICENSE)
 [![Go Version](https://img.shields.io/github/go-mod/go-version/s0rg/retry)](go.mod)
 
+[![Go Report Card](https://goreportcard.com/badge/github.com/s0rg/retry)](https://goreportcard.com/report/github.com/s0rg/retry)
+[![Maintainability](https://api.codeclimate.com/v1/badges/d6759af1231bf4f60f70/maintainability)](https://codeclimate.com/github/s0rg/retry/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/d6759af1231bf4f60f70/test_coverage)](https://codeclimate.com/github/s0rg/retry/test_coverage)
+
 # retry
 
- Small, full-featured, 100% test-covered retry package for golang.
+ Small, full-featured, 100% test-covered retry package for golang
 
 # features
 
