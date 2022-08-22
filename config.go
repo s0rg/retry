@@ -15,6 +15,12 @@ const (
 	minDuration = time.Duration(0)
 )
 
+// Step represents a single execution step to re-try.
+type Step struct {
+	Name string
+	Func func() error
+}
+
 // Config holds configuration.
 type Config struct {
 	sleep       time.Duration
