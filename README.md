@@ -43,10 +43,10 @@ import (
 
     try := retry.New(
         retry.Count(5),
-		retry.Parallelism(2),
-	    retry.Sleep(time.Second*3),
-	    retry.Jitter(time.Second/2),
-		retry.Verbose(true),
+        retry.Parallelism(2),
+        retry.Sleep(time.Second*3),
+        retry.Jitter(time.Second/2),
+        retry.Verbose(true),
     )
 
     var (
