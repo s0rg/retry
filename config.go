@@ -1,11 +1,21 @@
 package retry
 
 import (
+	"errors"
 	"fmt"
 	"log"
+	"math"
 	"time"
 
 	"golang.org/x/sync/errgroup"
+)
+
+type mode byte
+
+const (
+	Simple      mode = 0
+	Linear      mode = 1
+	Exponential mode = 2
 )
 
 const (
@@ -23,10 +33,12 @@ type Step struct {
 
 // Config holds configuration.
 type Config struct {
+	fatal       []error
 	sleep       time.Duration
 	jitter      time.Duration
 	count       int
 	parallelism int
+	mode        mode
 	verbose     bool
 }
 
@@ -63,7 +75,26 @@ func (c *Config) validate() {
 	}
 }
 
+func (c *Config) isFatal(err error) (yes bool) {
+	for i := 0; i < len(c.fatal); i++ {
+		if yes = errors.Is(c.fatal[i], err); yes {
+			return
+		}
+	}
+
+	return
+}
+
 func (c *Config) stepDuration(n int) (d time.Duration) {
+	switch c.mode {
+	case Linear:
+		return c.sleep*time.Duration(n) + c.jitter
+	case Exponential:
+		period := int64(math.Pow(2, float64(n)))
+		return c.sleep*time.Duration(period) + c.jitter
+	default:
+	}
+
 	return c.sleep + c.jitter*time.Duration(n)
 }
 
@@ -74,6 +105,10 @@ func (c *Config) Single(name string, fn func() error) (err error) {
 	for n := 0; n < c.count; n++ {
 		if err = fn(); err == nil {
 			return nil
+		}
+
+		if c.isFatal(err) {
+			break
 		}
 
 		if c.verbose {

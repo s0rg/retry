@@ -14,7 +14,7 @@
 # features
 
  - small (~200 sloc), 100% test-covered codebase
- - fully-customizable, you can specify number of retries, sleep (and sleep-jitter) between them and stdlog verbosity
+ - fully-customizable, you can specify number of retries, sleep (+ sleep-jitter, and mode - simple, linear or exponential) between them, and stdlog verbosity
  - three ways to retry - single function, chain (one-by-one) and parallel execution
 
 # examples

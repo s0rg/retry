@@ -39,3 +39,17 @@ func Parallelism(n int) func(*Config) {
 		c.parallelism = n
 	}
 }
+
+// Mode sets sleep mode - linear, exponential or simple (by default).
+func Mode(m mode) func(*Config) {
+	return func(c *Config) {
+		c.mode = m
+	}
+}
+
+// Fatal sets errors, that will act as non-retriable.
+func Fatal(errs ...error) func(*Config) {
+	return func(c *Config) {
+		c.fatal = append(c.fatal, errs...)
+	}
+}
