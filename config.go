@@ -85,13 +85,18 @@ func (c *Config) isFatal(err error) (yes bool) {
 	return
 }
 
+func ipow2(v int) int64 {
+	const two = 2
+
+	return int64(math.Pow(two, float64(v)))
+}
+
 func (c *Config) stepDuration(n int) (d time.Duration) {
 	switch c.mode {
 	case Linear:
 		return c.sleep*time.Duration(n) + c.jitter
 	case Exponential:
-		period := int64(math.Pow(2, float64(n)))
-		return c.sleep*time.Duration(period) + c.jitter
+		return c.sleep*time.Duration(ipow2(n)) + c.jitter
 	default:
 	}
 
