@@ -3,6 +3,7 @@
 [![Go Version](https://img.shields.io/github/go-mod/go-version/s0rg/retry)](go.mod)
 [![Tag](https://img.shields.io/github/v/tag/s0rg/retry?sort=semver)](https://github.com/s0rg/retry/tags)
 
+[![CI](https://github.com/s0rg/retry/workflows/ci/badge.svg)](https://github.com/s0rg/retry/actions?query=workflow%3Aci)
 [![Go Report Card](https://goreportcard.com/badge/github.com/s0rg/retry)](https://goreportcard.com/report/github.com/s0rg/retry)
 [![Maintainability](https://api.codeclimate.com/v1/badges/d6759af1231bf4f60f70/maintainability)](https://codeclimate.com/github/s0rg/retry/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/d6759af1231bf4f60f70/test_coverage)](https://codeclimate.com/github/s0rg/retry/test_coverage)
@@ -14,8 +15,9 @@
 # features
 
  - small (~200 sloc), 100% test-covered codebase
- - fully-customizable, you can specify number of retries, sleep (+ sleep-jitter, and mode - simple, linear or exponential) between them, and stdlog verbosity
- - three ways to retry - single function, chain (one-by-one) and parallel execution
+ - fully-customizable, you can specify number of retries, sleep (and sleep-jitter) between them, and stdlog verbosity
+ - 3 backoff strategies - simple, linear and exponential
+ - 3 ways to retry - single function, chain (one-by-one) and parallel execution
 
 # examples
 
