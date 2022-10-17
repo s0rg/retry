@@ -27,8 +27,8 @@ const (
 
 // Step represents a single execution step to re-try.
 type Step struct {
-	Name string
 	Func func() error
+	Name string
 }
 
 // Config holds configuration.
@@ -78,14 +78,14 @@ func (c *Config) validate() {
 func (c *Config) isFatal(err error) (yes bool) {
 	for i := 0; i < len(c.fatal); i++ {
 		if yes = errors.Is(c.fatal[i], err); yes {
-			return
+			return true
 		}
 	}
 
-	return
+	return false
 }
 
-func ipow2(v int) int64 {
+func ipow2(v int) (rv int64) {
 	const two = 2
 
 	return int64(math.Pow(two, float64(v)))
@@ -97,7 +97,6 @@ func (c *Config) stepDuration(n int) (d time.Duration) {
 		return c.sleep*time.Duration(n) + c.jitter
 	case Exponential:
 		return c.sleep*time.Duration(ipow2(n)) + c.jitter
-	default:
 	}
 
 	return c.sleep + c.jitter*time.Duration(n)

@@ -8,12 +8,15 @@ import (
 
 const maxTries = 3
 
-var errFail = errors.New("test fail")
+var (
+	errFail  = errors.New("test fail")
+	errFatal = errors.New("custom fatal error")
+)
 
 type failer struct {
+	err error
 	fun func()
 	lim int
-	err error
 }
 
 func newFailer(err error, f func()) *failer {
@@ -40,13 +43,25 @@ func TestSingle(t *testing.T) {
 	t.Parallel()
 
 	var table = []struct {
+		errExpect   error
 		errCount    int
 		countExpect int
-		errExpect   error
 	}{
-		{1, 2, nil},
-		{2, maxTries, nil},
-		{maxTries, maxTries, errFail},
+		{
+			errCount:    1,
+			countExpect: 2,
+			errExpect:   nil,
+		},
+		{
+			errCount:    2,
+			countExpect: maxTries,
+			errExpect:   nil,
+		},
+		{
+			errCount:    maxTries,
+			countExpect: maxTries,
+			errExpect:   errFail,
+		},
 	}
 
 	var (
@@ -82,15 +97,33 @@ func TestChain(t *testing.T) {
 	t.Parallel()
 
 	var table = []struct {
+		errExpect    error
 		errCountA    int
 		countAExpect int
 		errCountB    int
 		countBExpect int
-		errExpect    error
 	}{
-		{1, 2, 0, 1, nil},
-		{maxTries, maxTries, 0, 0, errFail},
-		{1, 2, maxTries, maxTries, errFail},
+		{
+			errCountA:    1,
+			countAExpect: 2,
+			errCountB:    0,
+			countBExpect: 1,
+			errExpect:    nil,
+		},
+		{
+			errCountA:    maxTries,
+			countAExpect: maxTries,
+			errCountB:    0,
+			countBExpect: 0,
+			errExpect:    errFail,
+		},
+		{
+			errCountA:    1,
+			countAExpect: 2,
+			errCountB:    maxTries,
+			countBExpect: maxTries,
+			errExpect:    errFail,
+		},
 	}
 
 	var (
@@ -139,15 +172,33 @@ func TestParallel(t *testing.T) {
 	t.Parallel()
 
 	var table = []struct {
+		errExpect    error
 		errCountA    int
 		countAExpect int
 		errCountB    int
 		countBExpect int
-		errExpect    error
 	}{
-		{1, 2, 0, 1, nil},
-		{maxTries, maxTries, 0, 1, errFail},
-		{1, 2, maxTries, maxTries, errFail},
+		{
+			errCountA:    1,
+			countAExpect: 2,
+			errCountB:    0,
+			countBExpect: 1,
+			errExpect:    nil,
+		},
+		{
+			errCountA:    maxTries,
+			countAExpect: maxTries,
+			errCountB:    0,
+			countBExpect: 1,
+			errExpect:    errFail,
+		},
+		{
+			errCountA:    1,
+			countAExpect: 2,
+			errCountB:    maxTries,
+			countBExpect: maxTries,
+			errExpect:    errFail,
+		},
 	}
 
 	var (
@@ -226,16 +277,20 @@ func TestValidate(t *testing.T) {
 func TestFatal(t *testing.T) {
 	t.Parallel()
 
-	var errFatal = errors.New("custom fatal error")
-
 	var table = []struct {
+		errExpect    error
 		errCountA    int
 		countAExpect int
 		errCountB    int
 		countBExpect int
-		errExpect    error
 	}{
-		{1, 1, 0, 0, errFatal},
+		{
+			errCountA:    1,
+			countAExpect: 1,
+			errCountB:    0,
+			countBExpect: 0,
+			errExpect:    errFatal,
+		},
 	}
 
 	var (
