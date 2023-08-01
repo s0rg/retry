@@ -15,9 +15,9 @@ linters:
     - exhaustivestruct
     - nonamedreturns
     - exhaustruct
-    - testpackage
     - exhaustive
     - varnamelen
+    - depguard
     - ireturn
     - gofumpt
 
