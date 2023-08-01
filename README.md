@@ -29,7 +29,7 @@ import (
     "github.com/s0rg/retry"
 )
 
-
+func main() {
     try := retry.New()
 
     // single
@@ -38,6 +38,7 @@ import (
     }); err != nil {
         log.Fatal("retry:", err)
     }
+}
 ```
 
 ## with config
@@ -49,6 +50,7 @@ import (
     "github.com/s0rg/retry"
 )
 
+func main() {
     try := retry.New(
         retry.Count(5),
         retry.Parallelism(2),
@@ -87,4 +89,6 @@ import (
     }
 
     // at this point all tree resources will be avialaible
+
+}
 ```

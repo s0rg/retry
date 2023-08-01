@@ -57,51 +57,6 @@ func New(opts ...option) (c *Config) {
 	return c
 }
 
-func (c *Config) validate() {
-	if c.count < minCount {
-		c.count = minCount
-	}
-
-	if c.sleep <= minDuration {
-		c.sleep = minSleep
-	}
-
-	if c.jitter < minDuration {
-		c.jitter = minDuration
-	}
-
-	if c.parallelism < minParallel {
-		c.parallelism = minParallel
-	}
-}
-
-func (c *Config) isFatal(err error) (yes bool) {
-	for i := 0; i < len(c.fatal); i++ {
-		if yes = errors.Is(c.fatal[i], err); yes {
-			return true
-		}
-	}
-
-	return false
-}
-
-func ipow2(v int) (rv int64) {
-	const two = 2
-
-	return int64(math.Pow(two, float64(v)))
-}
-
-func (c *Config) stepDuration(n int) (d time.Duration) {
-	switch c.mode {
-	case Linear:
-		return c.sleep*time.Duration(n) + c.jitter
-	case Exponential:
-		return c.sleep*time.Duration(ipow2(n)) + c.jitter
-	}
-
-	return c.sleep + c.jitter*time.Duration(n)
-}
-
 // Single executes 'fn', until no error returned, at most `Count` times (default is 1,
 // so `fn` will be executed at most 2 times), each execution delayed on time given
 // as `Sleep` option (default is 1 second).
@@ -163,4 +118,49 @@ func (c *Config) Parallel(steps ...Step) (err error) {
 	}
 
 	return nil
+}
+
+func (c *Config) validate() {
+	if c.count < minCount {
+		c.count = minCount
+	}
+
+	if c.sleep <= minDuration {
+		c.sleep = minSleep
+	}
+
+	if c.jitter < minDuration {
+		c.jitter = minDuration
+	}
+
+	if c.parallelism < minParallel {
+		c.parallelism = minParallel
+	}
+}
+
+func (c *Config) isFatal(err error) (yes bool) {
+	for i := 0; i < len(c.fatal); i++ {
+		if yes = errors.Is(c.fatal[i], err); yes {
+			return true
+		}
+	}
+
+	return false
+}
+
+func ipow2(v int) (rv int64) {
+	const two = 2
+
+	return int64(math.Pow(two, float64(v)))
+}
+
+func (c *Config) stepDuration(n int) (d time.Duration) {
+	switch c.mode {
+	case Linear:
+		return c.sleep*time.Duration(n) + c.jitter
+	case Exponential:
+		return c.sleep*time.Duration(ipow2(n)) + c.jitter
+	}
+
+	return c.sleep + c.jitter*time.Duration(n)
 }

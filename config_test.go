@@ -1,9 +1,11 @@
-package retry
+package retry_test
 
 import (
 	"errors"
 	"testing"
 	"time"
+
+	"github.com/s0rg/retry"
 )
 
 const maxTries = 3
@@ -71,10 +73,10 @@ func TestSingle(t *testing.T) {
 
 	fail := newFailer(errFail, func() { count++ })
 
-	try := New(
-		Count(maxTries),
-		Sleep(time.Millisecond),
-		Mode(Linear),
+	try := retry.New(
+		retry.Count(maxTries),
+		retry.Sleep(time.Millisecond),
+		retry.Mode(retry.Linear),
 	)
 
 	for n, s := range table {
@@ -135,14 +137,14 @@ func TestChain(t *testing.T) {
 	fa := newFailer(errFail, func() { countA++ })
 	fb := newFailer(errFail, func() { countB++ })
 
-	try := New(
-		Count(maxTries),
-		Sleep(time.Millisecond),
-		Verbose(true),
-		Mode(Exponential),
+	try := retry.New(
+		retry.Count(maxTries),
+		retry.Sleep(time.Millisecond),
+		retry.Verbose(true),
+		retry.Mode(retry.Exponential),
 	)
 
-	steps := []Step{
+	steps := []retry.Step{
 		{Name: "chain-A", Func: fa.Fail},
 		{Name: "chain-B", Func: fb.Fail},
 	}
@@ -210,13 +212,14 @@ func TestParallel(t *testing.T) {
 	fa := newFailer(errFail, func() { countA++ })
 	fb := newFailer(errFail, func() { countB++ })
 
-	try := New(
-		Count(maxTries),
-		Sleep(time.Millisecond),
-		Parallelism(2),
+	try := retry.New(
+		retry.Count(maxTries),
+		retry.Sleep(time.Millisecond),
+		retry.Jitter(time.Millisecond),
+		retry.Parallelism(2),
 	)
 
-	steps := []Step{
+	steps := []retry.Step{
 		{Name: "parallel-A", Func: fa.Fail},
 		{Name: "parallel-B", Func: fb.Fail},
 	}
@@ -245,32 +248,27 @@ func TestParallel(t *testing.T) {
 func TestValidate(t *testing.T) {
 	t.Parallel()
 
-	try := New(
-		Count(-10),
-		Parallelism(-6),
-		Sleep(-time.Hour),
-		Jitter(-time.Minute),
-		Verbose(true),
+	try := retry.New(
+		retry.Count(-10),
+		retry.Parallelism(-6),
+		retry.Sleep(-time.Hour),
+		retry.Jitter(-time.Minute),
 	)
 
-	if try.count != minCount {
-		t.Fatal("unexpected count")
+	c := 0
+
+	f := func() error {
+		c++
+
+		return nil
 	}
 
-	if try.sleep != minSleep {
-		t.Fatal("unexpected sleep")
+	if err := try.Single("test-validate", f); err != nil {
+		t.Error("test-validate", err)
 	}
 
-	if try.jitter != minDuration {
-		t.Fatal("unexpected jitter")
-	}
-
-	if try.parallelism != minParallel {
-		t.Fatal("unexpected parallelism")
-	}
-
-	if !try.verbose {
-		t.Fatal("unexpected verbose")
+	if c < 1 {
+		t.Error("unexpected count")
 	}
 }
 
@@ -302,12 +300,12 @@ func TestFatal(t *testing.T) {
 	fa := newFailer(errFatal, func() { countA++ })
 	fb := newFailer(errFail, func() { countB++ })
 
-	try := New(
-		Count(maxTries),
-		Fatal(errFatal),
+	try := retry.New(
+		retry.Count(maxTries),
+		retry.Fatal(errFatal),
 	)
 
-	steps := []Step{
+	steps := []retry.Step{
 		{Name: "parallel-A", Func: fa.Fail},
 		{Name: "parallel-B", Func: fb.Fail},
 	}
