@@ -13,15 +13,21 @@ import (
 type mode byte
 
 const (
-	Simple      mode = 0
-	Linear      mode = 1
+	// Simple mode - time increases by sleep + jitter*attempt.
+	Simple mode = 0
+	// Linear mode - time increases by sleep*attempt + jitter.
+	Linear mode = 1
+	// Exponential mode - time increases by sleep*2^attempt + jitter.
 	Exponential mode = 2
+	// Fibonacci mode - time increases by sleep*fibonacci(attempt) + jitter.
+	Fibonacci mode = 3
 )
 
 const (
 	minParallel = 0
 	minCount    = 1
-	minSleep    = time.Second
+	two         = 2
+	minSleep    = time.Second / 2
 	minDuration = time.Duration(0)
 )
 
@@ -148,19 +154,27 @@ func (c *Config) isFatal(err error) (yes bool) {
 	return false
 }
 
-func ipow2(v int) (rv int64) {
-	const two = 2
-
-	return int64(math.Pow(two, float64(v)))
-}
-
 func (c *Config) stepDuration(n int) (d time.Duration) {
 	switch c.mode {
 	case Linear:
 		return c.sleep*time.Duration(n) + c.jitter
 	case Exponential:
 		return c.sleep*time.Duration(ipow2(n)) + c.jitter
+	case Fibonacci:
+		return c.sleep*time.Duration(fibonacci(n)) + c.jitter
 	}
 
 	return c.sleep + c.jitter*time.Duration(n)
+}
+
+func ipow2(v int) (rv int64) {
+	return int64(math.Pow(two, float64(v)))
+}
+
+func fibonacci(n int) int64 {
+	if n < two {
+		return int64(n)
+	}
+
+	return fibonacci(n-1) + fibonacci(n-two)
 }

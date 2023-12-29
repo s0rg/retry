@@ -272,6 +272,39 @@ func TestValidate(t *testing.T) {
 	}
 }
 
+func TestFibonacci(t *testing.T) {
+	t.Parallel()
+
+	var counter int
+
+	const (
+		tryMax   = 5
+		errCount = 4
+	)
+
+	try := retry.New(
+		retry.Count(tryMax),
+		retry.Mode(retry.Fibonacci),
+	)
+
+	err := try.Single("test-fibonacci", func() (err error) {
+		counter++
+
+		if counter < errCount {
+			return errFail
+		}
+
+		return nil
+	})
+	if err != nil {
+		t.FailNow()
+	}
+
+	if counter != errCount {
+		t.FailNow()
+	}
+}
+
 func TestFatal(t *testing.T) {
 	t.Parallel()
 
@@ -303,6 +336,7 @@ func TestFatal(t *testing.T) {
 	try := retry.New(
 		retry.Count(maxTries),
 		retry.Fatal(errFatal),
+		retry.Mode(retry.Fibonacci),
 	)
 
 	steps := []retry.Step{
