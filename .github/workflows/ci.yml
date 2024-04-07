@@ -16,7 +16,7 @@ jobs:
       name: ci
     steps:
       - name: checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: golangci-lint
         uses: golangci/golangci-lint-action@v3
   test:
@@ -25,15 +25,13 @@ jobs:
       name: ci
     steps:
       - name: checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: setup golang
-        uses: actions/setup-go@v3
+        uses: actions/setup-go@v5
         with:
-          go-version: ^1.19
-          check-latest: true
-          cache: true
+          go-version: ^1.22
       - name: test-coverage
-        uses: paambaati/codeclimate-action@v3.2.0
+        uses: paambaati/codeclimate-action@v5.0.0
         env:
           CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
         with:
@@ -47,13 +45,11 @@ jobs:
       name: ci
     steps:
       - name: checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: setup golang
-        uses: actions/setup-go@v3
+        uses: actions/setup-go@v5
         with:
-          go-version: ^1.19
-          check-latest: true
-          cache: true
+          go-version: ^1.22
       - name: init codeql
         uses: github/codeql-action/init@v2
         with:
