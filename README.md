@@ -4,9 +4,9 @@
 [![Tag](https://img.shields.io/github/v/tag/s0rg/retry?sort=semver)](https://github.com/s0rg/retry/tags)
 
 [![CI](https://github.com/s0rg/retry/workflows/ci/badge.svg)](https://github.com/s0rg/retry/actions?query=workflow%3Aci)
+[![Maintainability](https://qlty.sh/badges/a989a009-302e-4422-9cd9-4110e299c557/maintainability.svg)](https://qlty.sh/gh/s0rg/projects/retry)
+[![Code Coverage](https://qlty.sh/badges/a989a009-302e-4422-9cd9-4110e299c557/test_coverage.svg)](https://qlty.sh/gh/s0rg/projects/retry)
 [![Go Report Card](https://goreportcard.com/badge/github.com/s0rg/retry)](https://goreportcard.com/report/github.com/s0rg/retry)
-[![Maintainability](https://api.codeclimate.com/v1/badges/d6759af1231bf4f60f70/maintainability)](https://codeclimate.com/github/s0rg/retry/maintainability)
-[![Test Coverage](https://api.codeclimate.com/v1/badges/d6759af1231bf4f60f70/test_coverage)](https://codeclimate.com/github/s0rg/retry/test_coverage)
 
 # retry
 
