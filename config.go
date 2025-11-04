@@ -67,7 +67,7 @@ func New(opts ...option) (c *Config) {
 // so `fn` will be executed at most 2 times), each execution delayed on time given
 // as `Sleep` option (default is 1 second).
 func (c *Config) Single(name string, fn func() error) (err error) {
-	for n := 0; n < c.count; n++ {
+	for n := range c.count {
 		if err = fn(); err == nil {
 			return nil
 		}
@@ -92,7 +92,7 @@ func (c *Config) Single(name string, fn func() error) (err error) {
 func (c *Config) Chain(steps ...Step) (err error) {
 	var step *Step
 
-	for i := 0; i < len(steps); i++ {
+	for i := range len(steps) {
 		step = &steps[i]
 
 		if err = c.Single(step.Name, step.Func); err != nil {
@@ -111,7 +111,7 @@ func (c *Config) Parallel(steps ...Step) (err error) {
 		eg.SetLimit(c.parallelism)
 	}
 
-	for i := 0; i < len(steps); i++ {
+	for i := range len(steps) {
 		step := steps[i]
 
 		eg.Go(func() error {
@@ -145,8 +145,8 @@ func (c *Config) validate() {
 }
 
 func (c *Config) isFatal(err error) (yes bool) {
-	for i := 0; i < len(c.fatal); i++ {
-		if yes = errors.Is(c.fatal[i], err); yes {
+	for i := range len(c.fatal) {
+		if errors.Is(c.fatal[i], err) {
 			return true
 		}
 	}

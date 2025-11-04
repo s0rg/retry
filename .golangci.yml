@@ -8,10 +8,11 @@ linters:
     - exhaustive
     - exhaustruct
     - gochecknoglobals
+    - nonamedreturns
+    - noinlineerr
+    - varnamelen
     - intrange
     - ireturn
-    - nonamedreturns
-    - varnamelen
   settings:
     errcheck:
       check-type-assertions: true
